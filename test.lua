@@ -1,31 +1,46 @@
-local OrionLib = loadstring(game:HttpGet(('https://raw.githubusercontent.com/jensonhirst/Orion/main/source')))()
+local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 
-local Window = OrionLib:MakeWindow({Name = "My Hack GUI", HidePremium = false, SaveConfig = false, ConfigFolder = "MyConfig"})
-
-OrionLib:MakeNotification({
-    Name = "Hi!",
-    Content = "Welcome to my GUI!",
-    Image = "rbxassetid://4483345998",
-    Time = 5
+local Window = Rayfield:CreateWindow({
+    Name = "My Rayfield GUI",
+    LoadingTitle = "Rayfield Example",
+    LoadingSubtitle = "by You",
+    ConfigurationSaving = {
+       Enabled = false,
+    },
+    Discord = {
+       Enabled = false,
+    },
+    KeySystem = false,
 })
 
-local Tab = Window:MakeTab({
-    Name = "Main",
-    Icon = "rbxassetid://4483345998",
-    PremiumOnly = false
+local MainTab = Window:CreateTab("Main", 4483362458) -- รูปไอคอนจาก Roblox ID
+
+MainTab:CreateButton({
+   Name = "Speed x2",
+   Callback = function()
+       game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 32
+   end,
 })
 
-Tab:AddButton({
-    Name = "Speed x2",
-    Callback = function()
-        game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 32
-    end
+MainTab:CreateToggle({
+   Name = "Infinite Jump",
+   CurrentValue = false,
+   Callback = function(state)
+       getgenv().infjump = state
+       game:GetService("UserInputService").JumpRequest:Connect(function()
+           if getgenv().infjump then
+               game.Players.LocalPlayer.Character:FindFirstChildOfClass("Humanoid"):ChangeState("Jumping")
+           end
+       end)
+   end,
 })
 
-Tab:AddToggle({
-    Name = "ESP Toggle",
-    Default = false,
-    Callback = function(Value)
-        print("ESP: ", Value)
-    end
+MainTab:CreateSlider({
+   Name = "Set WalkSpeed",
+   Range = {16, 100},
+   Increment = 1,
+   CurrentValue = 16,
+   Callback = function(Value)
+       game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = Value
+   end,
 })
